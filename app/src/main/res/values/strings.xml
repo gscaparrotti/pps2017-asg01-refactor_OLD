@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Bender Mobile</string>
+    <string name="itemTableText">Tavolo N°.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tableTitle">Dettaglio Tavolo N°.</string>
+    <string name="addToTableText">Aggiungi Piatto</string>
+    <string name="tableTitleDetailText">Piatti ancora da servire</string>
+    <string name="totalPrice">Prezzo Totale:</string>
+    <string name="updateButtonString">Aggiorna</string>
+</resources>
