@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/my_toolbar"
+    android:orientation="vertical"
+    tools:context=".fragments.AddDishFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:id="@+id/tableNameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/buttonAggiungi"
+        android:ems="10"
+        android:hint="@string/NomeTavolo"
+        android:inputType="textPersonName" />
+
+    <ListView
+        android:id="@+id/addDishListView"
+        android:layout_width="match_parent"
+        android:layout_height="444dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tableNameEditText"
+        android:layout_above="@+id/buttonAggiungi" />
+
+    <EditText
+        android:id="@+id/editText_nome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/buttonAggiungi"
+        android:hint="@string/NomePiatto" />
+
+    <Button
+        android:id="@+id/buttonAggiungi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editText_nome"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/editText_prezzo"
+        android:layout_gravity="right"
+        android:text="@string/Aggiungi" />
+
+    <EditText
+        android:id="@+id/editText_prezzo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editText_nome"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/buttonAggiungi"
+        android:ems="10"
+        android:hint="@string/PrezzoPiatto"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/tableNameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/addDishListView"
+        android:layout_alignParentEnd="true"
+        android:text="@string/updateButtonString" />
+</RelativeLayout>

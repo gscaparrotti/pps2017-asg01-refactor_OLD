@@ -7,17 +7,46 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android.gscaparrotti.bendermobile.MainActivity">
+    android:layout_below="@+id/my_toolbar"
+    tools:context=".activities.MainActivity">
 
     <GridView
-        android:background="#000000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tablesContainer"
         android:horizontalSpacing="1dp"
         android:verticalSpacing="1dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:numColumns="auto_fit" />
+        android:numColumns="auto_fit"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/mainUpdate" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/updateButtonString"
+        android:id="@+id/mainUpdate"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/fakeView" />
+
+    <View android:id="@+id/fakeView"
+        android:layout_alignParentBottom="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ViewAllPendingOrders"
+        android:id="@+id/allPending"
+        android:layout_alignBottom="@+id/mainUpdate"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/fakeView" />
+
+
 </RelativeLayout>

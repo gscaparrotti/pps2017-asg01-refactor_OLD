@@ -7,18 +7,25 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android.gscaparrotti.bendermobile.MainActivity">
+    android:layout_below="@+id/my_toolbar"
+    tools:context=".activities.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="35dp"
+        android:textSize="35sp"
         android:text="@string/tableTitle"
         android:id="@+id/tableTitle"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/dishesList"
+        android:autoText="false"
+        android:gravity="center_horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:elegantTextHeight="false" />
 
     <View android:id="@+id/fakeView"
         android:layout_alignParentBottom="true"
@@ -51,7 +58,7 @@
         android:text="@string/tableTitleDetailText"
         android:id="@+id/tableTitleDetail"
         android:layout_below="@+id/tableTitle"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -59,6 +66,26 @@
         android:id="@+id/dishesList"
         android:layout_below="@+id/tableTitleDetail"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/addToTable" />
+        android:layout_above="@+id/totalPrice" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/PrezzoTotale"
+        android:id="@+id/totalPrice"
+        android:layout_above="@+id/addToTable"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <CheckBox
+        android:id="@+id/filterCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Attiva FIltro"
+        android:layout_below="@+id/tableTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/dishesList"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -2,53 +2,43 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:autofit="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:id="@+id/itemTableLayout">
 
     <me.grantland.widget.AutofitTextView
-        android:id="@+id/dish"
+        android:id="@+id/addDishName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
+        android:text="Medium Text"
         android:singleLine="true"
         android:maxLines="1"
         android:textSize="18sp"
         autofit:minTextSize="10sp"
-        android:text="Medium Text"
         android:textColor="@android:color/black"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/removeButton" />
+        android:layout_toStartOf="@+id/addDishbutton" />
 
     <TextView
-        android:id="@+id/dishServed"
+        android:id="@+id/addDishPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"
+        android:text="Medium Text"
+        android:layout_below="@id/addDishName"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/StringDaServire"
-        android:layout_below="@+id/dishToServe"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/removeButton" />
-
-    <TextView
-        android:id="@+id/dishToServe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/StringOrdinati"
-        android:layout_below="@+id/dish"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/removeButton" />
+        android:layout_toStartOf="@+id/addDishbutton" />
 
     <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Remove"
-        android:id="@+id/removeButton"
-        android:layout_gravity="right|center_vertical"
-        android:layout_alignParentTop="true"
+        android:text="@string/addToTableText"
+        android:id="@+id/addDishbutton"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/dishServed" />
+        android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/addDishPrice" />
 
 </RelativeLayout>
