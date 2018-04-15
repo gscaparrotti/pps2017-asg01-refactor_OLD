@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -20,7 +19,9 @@ import android.widget.Toast;
 import com.android.gscaparrotti.bendermobile.R;
 import com.android.gscaparrotti.bendermobile.activities.MainActivity;
 import com.android.gscaparrotti.bendermobile.network.ServerInteractor;
-import com.google.common.collect.ImmutableMap;
+import com.android.gscaparrotti.bendermobile.utilities.BenderAsyncTaskResult;
+import com.android.gscaparrotti.bendermobile.utilities.BenderAsyncTaskResult.Empty;
+import com.android.gscaparrotti.bendermobile.utilities.FragmentNetworkingBenderAsyncTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,11 +61,11 @@ public class MainFragment extends Fragment {
         gv = (GridView) view.findViewById(R.id.tablesContainer);
         ta = new TableAdapter(getActivity());
         gv.setAdapter(ta);
-        new TableAmountDownloader().execute();
+        new TableAmountDownloader(MainFragment.this).execute();
         view.findViewById(R.id.mainUpdate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TableAmountDownloader().execute();
+                new TableAmountDownloader(MainFragment.this).execute();
             }
         });
         view.findViewById(R.id.allPending).setOnClickListener(new View.OnClickListener() {
@@ -164,8 +165,8 @@ public class MainFragment extends Fragment {
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    new TableResetRequestUploader().execute(table);
-                                    new TableAmountDownloader().execute();
+                                    new TableResetRequestUploader(MainFragment.this).execute(table);
+                                    new TableAmountDownloader(MainFragment.this).execute();
                                 }})
                             .setNegativeButton(android.R.string.no, null).show();
                     return true;
@@ -179,104 +180,63 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private class TableResetRequestUploader extends AsyncTask<Integer, Void, Boolean> {
+    private final class TableResetRequestUploader extends FragmentNetworkingBenderAsyncTask<Integer, Empty> {
 
-        private String errorMessage;
-        private String ip;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (isAdded()) {
-                ip = getActivity().getSharedPreferences("BenderIP", 0).getString("BenderIP", "Absent");
-            } else {
-                this.cancel(true);
-            }
+        TableResetRequestUploader(Fragment fragment) {
+            super(fragment);
         }
 
         @Override
-        protected Boolean doInBackground(final Integer... params) {
-            final ServerInteractor serverInteractor = ServerInteractor.getInstance();
-            final String command = "RESET TABLE " + params[0];
-            boolean success = false;
+        protected BenderAsyncTaskResult<Empty> innerDoInBackground(Integer[] objects) {
+            final ServerInteractor serverInteractor = new ServerInteractor();
+            final String command = "RESET TABLE " + objects[0];
             final Object input = serverInteractor.sendCommandAndGetResult(ip, 6789, command);
-            if (input instanceof Exception) {
-                final Exception e = (Exception) input;
-                errorMessage = e.toString();
-            } else if (input instanceof String) {
-                final String stringInput = (String) input;
-                if (stringInput.equals("TABLE RESET CORRECTLY")) {
-                    success = true;
-                } else {
-                    errorMessage = stringInput;
-                }
+            if (input instanceof String && input.equals("TABLE RESET CORRECTLY")) {
+                return new BenderAsyncTaskResult<>(BenderAsyncTaskResult.EMPTY_RESULT);
             }
-            return success;
+            return new BenderAsyncTaskResult<>(new IllegalArgumentException(MainActivity.commonContext.getString(R.string.DatiNonValidi)));
         }
 
         @Override
-        protected void onPostExecute(final Boolean success) {
-            super.onPostExecute(success);
-            if (isAdded()) {
-                if (success) {
-                    Toast.makeText(MainActivity.toastContext, getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(MainActivity.toastContext, errorMessage, Toast.LENGTH_LONG).show();
-                }
-            }
+        protected void innerOnSuccessfulPostExecute(BenderAsyncTaskResult<Empty> result) {
+            Toast.makeText(MainActivity.commonContext, getString(R.string.ResetSuccess), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void innerOnUnsuccessfulPostExecute(BenderAsyncTaskResult<Empty> error) {
+            Toast.makeText(MainActivity.commonContext, error.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
-    private class TableAmountDownloader extends AsyncTask<Void, Void, Pair<Integer, Map<Integer, String>>> {
+    private final class TableAmountDownloader extends FragmentNetworkingBenderAsyncTask<Empty, Pair<Integer, Map<Integer, String>>> {
 
-        private String ip;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (isAdded()) {
-                ip = getActivity().getSharedPreferences("BenderIP", 0).getString("BenderIP", "Absent");
-            } else {
-                this.cancel(true);
-            }
+        TableAmountDownloader(Fragment fragment) {
+            super(fragment);
         }
 
         @Override
-        protected Pair<Integer, Map<Integer, String>> doInBackground(final Void... params) {
-            final ServerInteractor serverInteractor = ServerInteractor.getInstance();
-            Integer amount = 0;
-            Map<Integer, String> names = ImmutableMap.of();
+        protected BenderAsyncTaskResult<Pair<Integer, Map<Integer, String>>> innerDoInBackground(Empty[] objects) {
+            final ServerInteractor serverInteractor = new ServerInteractor();
             final Object receivedAmount = serverInteractor.sendCommandAndGetResult(ip, 6789, "GET AMOUNT");
-            if (receivedAmount instanceof Exception) {
-                amount = -1;
-            } else if (receivedAmount instanceof Integer){
-                amount = (Integer) receivedAmount;
-                final Object receivedNames = serverInteractor.sendCommandAndGetResult(ip, 6789, "GET NAMES");
-                if (receivedNames instanceof Exception) {
-                    amount = -1;
-                } else if (receivedNames instanceof Map) {
-                    names = (Map<Integer, String>) receivedNames;
-                }
+            final Object receivedNames = serverInteractor.sendCommandAndGetResult(ip, 6789, "GET NAMES");
+            if (receivedAmount instanceof Integer && receivedNames instanceof Map) {
+                final Integer amount = (Integer) receivedAmount;
+                final Map<Integer, String> names = (Map<Integer, String>) receivedNames;
+                return new BenderAsyncTaskResult<>(new Pair<>(amount, names));
             }
-            return new Pair<>(amount, names);
+            return new BenderAsyncTaskResult<>(new IllegalArgumentException(MainActivity.commonContext.getString(R.string.DatiNonValidi)));
         }
 
         @Override
-        protected void onPostExecute(final Pair<Integer, Map<Integer, String>> pair) {
-            super.onPostExecute(pair);
-            if (isAdded()) {
-                if (pair.first < 0) {
-                    Toast.makeText(MainActivity.toastContext, getString(R.string.ServerError), Toast.LENGTH_LONG).show();
-                    if (isVisible()) {
-                        MainFragment.this.getView().setBackgroundColor(Color.rgb(204, 94, 61));
-                    }
-                } else {
-                    if (isVisible()) {
-                        MainFragment.this.getView().setBackgroundColor(Color.TRANSPARENT);
-                        MainFragment.this.tableAdded(pair.first, pair.second);
-                    }
-                }
-            }
+        protected void innerOnSuccessfulPostExecute(BenderAsyncTaskResult<Pair<Integer, Map<Integer, String>>> result) {
+            MainFragment.this.getView().setBackgroundColor(Color.TRANSPARENT);
+            MainFragment.this.tableAdded(result.getResult().first, result.getResult().second);
+        }
+
+        @Override
+        protected void innerOnUnsuccessfulPostExecute(BenderAsyncTaskResult<Pair<Integer, Map<Integer, String>>> error) {
+            MainFragment.this.getView().setBackgroundColor(Color.rgb(204, 94, 61));
+            Toast.makeText(MainActivity.commonContext, error.getError().getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 }
