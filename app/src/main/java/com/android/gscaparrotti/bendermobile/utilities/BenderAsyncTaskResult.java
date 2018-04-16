@@ -2,7 +2,7 @@ package com.android.gscaparrotti.bendermobile.utilities;
 
 public class BenderAsyncTaskResult<A> {
 
-    public static final Empty EMPTY_RESULT = new Empty();
+    public static final Empty EMPTY_RESULT = Empty.getInstance();
 
     private final boolean success;
     private final A result;
@@ -39,6 +39,13 @@ public class BenderAsyncTaskResult<A> {
     }
 
     public static final class Empty {
+
+        private static Empty instance = new Empty();
+
+        private static Empty getInstance() {
+            return instance;
+        }
+
         private Empty() {}
     }
 
