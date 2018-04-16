@@ -184,8 +184,7 @@ public class AddDishFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<List<IDish>> innerDoInBackground(Void[] objects) {
-            final ServerInteractor dataDownloader = new ServerInteractor();
-            final Object input = dataDownloader.sendCommandAndGetResult(ip, 6789, "GET MENU");
+            final Object input = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET MENU");
             if (input instanceof IMenu) {
                 return new BenderAsyncTaskResult<>(Arrays.asList(((IMenu) input).getDishesArray()));
             }
@@ -211,9 +210,8 @@ public class AddDishFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Empty> innerDoInBackground(Order[] objects) {
-            final ServerInteractor uploader = new ServerInteractor();
             for (final Order order : objects) {
-                Object result = uploader.sendCommandAndGetResult(ip, 6789, order);
+                Object result = new ServerInteractor().sendCommandAndGetResult(ip, 6789, order);
                 if (result instanceof String) {
                     if (!result.equals("ORDER ADDED CORRECTLY")) {
                         return new BenderAsyncTaskResult<>(new IllegalArgumentException(MainActivity.commonContext.getString(R.string.DatiNonValidiIngresso)));
@@ -242,13 +240,12 @@ public class AddDishFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Empty> innerDoInBackground(String[] objects) {
-            final ServerInteractor uploader = new ServerInteractor();
             for (final String name : objects) {
                 Object result;
                 if (name.length() > 0) {
-                    result = uploader.sendCommandAndGetResult(ip, 6789, "SET NAME " + tableNumber + " " + name);
+                    result = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "SET NAME " + tableNumber + " " + name);
                 } else {
-                    result = uploader.sendCommandAndGetResult(ip, 6789, "REMOVE NAME " + tableNumber);
+                    result = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "REMOVE NAME " + tableNumber);
                 }
                 if (result instanceof String) {
                     if (!result.equals("NAME SET CORRECTLY")) {

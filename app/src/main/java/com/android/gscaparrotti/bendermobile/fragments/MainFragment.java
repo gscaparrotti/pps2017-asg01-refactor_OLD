@@ -188,9 +188,8 @@ public class MainFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Empty> innerDoInBackground(Integer[] objects) {
-            final ServerInteractor serverInteractor = new ServerInteractor();
             final String command = "RESET TABLE " + objects[0];
-            final Object input = serverInteractor.sendCommandAndGetResult(ip, 6789, command);
+            final Object input = new ServerInteractor().sendCommandAndGetResult(ip, 6789, command);
             if (input instanceof String && input.equals("TABLE RESET CORRECTLY")) {
                 return new BenderAsyncTaskResult<>(BenderAsyncTaskResult.EMPTY_RESULT);
             }
@@ -216,9 +215,8 @@ public class MainFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Pair<Integer, Map<Integer, String>>> innerDoInBackground(Empty[] objects) {
-            final ServerInteractor serverInteractor = new ServerInteractor();
-            final Object receivedAmount = serverInteractor.sendCommandAndGetResult(ip, 6789, "GET AMOUNT");
-            final Object receivedNames = serverInteractor.sendCommandAndGetResult(ip, 6789, "GET NAMES");
+            final Object receivedAmount = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET AMOUNT");
+            final Object receivedNames = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET NAMES");
             if (receivedAmount instanceof Integer && receivedNames instanceof Map) {
                 final Integer amount = (Integer) receivedAmount;
                 final Map<Integer, String> names = (Map<Integer, String>) receivedNames;

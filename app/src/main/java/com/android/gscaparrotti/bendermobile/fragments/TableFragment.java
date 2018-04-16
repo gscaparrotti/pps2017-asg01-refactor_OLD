@@ -325,9 +325,8 @@ public class TableFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Empty> innerDoInBackground(Order[] objects) {
-            final ServerInteractor uploader = new ServerInteractor();
             boolean result = false;
-            final Object resultFromServer = uploader.sendCommandAndGetResult(ip, 6789, objects[0]);
+            final Object resultFromServer = new ServerInteractor().sendCommandAndGetResult(ip, 6789, objects[0]);
             if (resultFromServer instanceof String) {
                 final String stringResult = (String) resultFromServer;
                 if (stringResult.equals("ORDER UPDATED CORRECTLY")) {
@@ -359,19 +358,18 @@ public class TableFragment extends Fragment {
 
         @Override
         protected BenderAsyncTaskResult<Pair<List<Order>, String>> innerDoInBackground(final Integer[] objects) {
-            final ServerInteractor dataDownloader = new ServerInteractor();
             final Object receivedOrders;
             final Object receivedTableNames;
             final List<Order> outputOrders;
             final String outputName;
             if (objects[0] > 0) {
-                receivedOrders = dataDownloader.sendCommandAndGetResult(ip, 6789, "GET TABLE " + objects[0]);
+                receivedOrders = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET TABLE " + objects[0]);
             } else if (objects[0] == 0) {
-                receivedOrders = dataDownloader.sendCommandAndGetResult(ip, 6789, "GET PENDING ORDERS");
+                receivedOrders = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET PENDING ORDERS");
             } else {
                 return new BenderAsyncTaskResult<>(new IllegalArgumentException(MainActivity.commonContext.getString(R.string.DatiNonValidi)));
             }
-            receivedTableNames = dataDownloader.sendCommandAndGetResult(ip, 6789, "GET NAMES");
+            receivedTableNames = new ServerInteractor().sendCommandAndGetResult(ip, 6789, "GET NAMES");
             if ((receivedOrders instanceof Map || receivedOrders instanceof List) && receivedTableNames instanceof Map) {
                 @SuppressWarnings("unchecked")
                 final Map<Integer, String> tableNames = (Map<Integer, String>) receivedTableNames;

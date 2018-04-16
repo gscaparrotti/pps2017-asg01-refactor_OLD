@@ -77,18 +77,6 @@ public class MainActivity extends Activity implements TableFragment.OnTableFragm
     protected void onStop() {
         super.onStop();
         Log.d("STOP", "STOP");
-//        final ServerInteractor interactor = new ServerInteractor();
-//        final String ip = getSharedPreferences("BenderIP", 0).getString("BenderIP", "Absent");
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    interactor.sendCommandAndGetResult(ip, 6789, "CLOSE CONNECTION");
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
     }
 
     @Override

@@ -15,25 +15,25 @@ import java.net.Socket;
 public class ServerInteractor {
 
     private Socket socket;
+    private boolean used = false;
 
     public ServerInteractor() {
         socket = new Socket();
     }
 
     public Object sendCommandAndGetResult(final String address, final int port, final Object input) {
-        Object datas;
-        if (socket.isClosed()) {
+        if (used) {
             throw new IllegalStateException("You cannot use a ServerInteractor twice");
         }
+        used = true;
         try {
             socket.connect(new InetSocketAddress(address, port), 5000);
             socket.setSoTimeout(5000);
             socket.setTcpNoDelay(true);
-            final ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
-            final ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
-            outputStream.writeObject(input);
-            datas = inputStream.readObject();
+            new ObjectOutputStream(socket.getOutputStream()).writeObject(input);
+            final Object data = new ObjectInputStream(socket.getInputStream()).readObject();
             socket.close();
+            return data;
         } catch (final IOException | ClassNotFoundException e) {
             try {
                 socket.close();
@@ -42,7 +42,6 @@ public class ServerInteractor {
                 throw new BenderNetworkException(MainActivity.commonContext.getString(R.string.ErroreSocketSenzaChiusura));
             }
         }
-        return datas;
     }
 
 }
